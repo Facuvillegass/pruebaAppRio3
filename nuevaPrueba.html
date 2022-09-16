@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form id="form">
+      <input id="input" type="file" />
+      <button type="submit">cargar</button>
+    </form>
+
+    <script>
+      let form = document.getElementById("form");
+      let input = document.getElementById("input");
+      var imageUrl;
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const reader = new FileReader();
+        reader.readAsDataURL(input.files[0]);
+        reader.addEventListener("load", async (e) => {
+          imageUrl = e.target.result )}
+        
+          await fetch(
+            "https://sheet.best/api/sheets/fc1cea9d-cc5f-401e-9a46-cc1c7a0de830"
+          ,
+            {
+              method: "POST",
+              mode: "cors",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                id: "prueba",
+                img: imageUrl,
+              }),
+            })
+     
+         
+    </script>
+  </body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form id="form">
+      <input type="file" id="input" />
+      <input type="text" name="text" />
+      <button type="submit">Cargar</button>
+    </form>
+    <!-- <div id="div"></div> -->
+
+    <script>
+      let form = document.getElementById("form");
+      let input = document.getElementById("input");
+      let div = document.getElementById("div");
+
+      const sendData = async (data) => {
+        await fetch(
+          "https://sheet.best/api/sheets/fc1cea9d-cc5f-401e-9a46-cc1c7a0de830",
+          {
+            method: "POST",
+            mode: "cors",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              id: "prueba",
+              img: data
+            }),
+          }
+        );
+      }
+
+
+      form.addEventListener("submit", async function (evento) {
+        evento.preventDefault();
+        const reader = new FileReader();
+        reader.readAsDataURL(input.files[0]);
+        reader.addEventListener("load", async (e) => {
+                await sendData(e.target.result)
+                //  div.innerHTML = `<embed src="${imgUrl}" />`
+              })    
+
+       
+      });
+
+
+  
+    </script>
+  </body>
+</html>
