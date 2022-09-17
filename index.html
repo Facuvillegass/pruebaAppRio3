@@ -6,55 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
   </head>
+
+  <button id="btn">BTNGet</button>
+  <div id="div"></div>
   <body>
-    <form id="form">
-      <input id="input" type="file" />
-      <button type="submit">cargar</button>
-    </form>
-    <div id="div"></div>
-    <button id="btnSetImage">Set image</button>
-    <button id="btnGetImage">Get image</button>
     <script>
-      let form = document.getElementById("form");
-      let input = document.getElementById("input");
+      const success = (e) => {
+        console.log(e.coords)
+      };
+
+      navigator.geolocation.getCurrentPosition(success);
+      let btnGetImage = document.getElementById("btn");
       let div = document.getElementById("div");
-      let imageUrl;
-      let imagenParte1;
-      let imagenParte2;
-      let imagenParte3;
-      let btnSetImage = document.getElementById("btnSetImage");
-      let btnGetImage = document.getElementById("btnGetImage");
-
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const reader = new FileReader();
-        reader.readAsDataURL(input.files[0]);
-        reader.addEventListener("load", async (e) => {
-          imageUrl = e.target.result;
-          imagenParte1 = imageUrl.substring(0, 49998);
-          imagenParte2 = imageUrl.substring(49998, 98000);
-          imagenParte3 = imageUrl.substring(98000);
-        });
-      });
-
-      btnSetImage.addEventListener("click", async () => {
-        await fetch(
-          "https://sheet.best/api/sheets/fc1cea9d-cc5f-401e-9a46-cc1c7a0de830",
-          {
-            method: "POST",
-            mode: "cors",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              id: "prueba",
-              img: imagenParte1,
-              img2: imagenParte2,
-              img3: imagenParte3,
-            }),
-          }
-        );
-      });
 
       btnGetImage.addEventListener("click", async () => {
         let data = await fetch(
@@ -62,19 +25,20 @@
         );
         let dataOk = await data.json();
 
-        console.log(dataOk[4]);
+        dataOk.map((img) => {
+          let imgCompleta = img.img + img.img2 + img.img3;
+          div.innerHTML = `<embed src="${imgCompleta}" />`;
+        });
 
-        let imgCompleta = dataOk[0].img + dataOk[0].img2 + dataOk[0].img3;
-        div.innerHTML = `<embed src="${imgCompleta}" />`;
-        console.log(imgCompleta.length);
-        console.log(imageUrl.length);
+        // dataOk.map((imagen) => {
+        //   if (imagen.nombreImg == nombreImg) {
+        //     let imgCompleta = imagen.img + imagen.img2 + imagen.img3;
+        //
+        //   }
+        // });
+
+        console.log(dataOk);
       });
-
-      // let nuemros = "123456789"
-      // let parte1 = nuemros.substring(0,3)
-      // let parte2 = nuemros.substring(3,6)
-      // let parte3 = nuemros.substring(6)
-      // console.log(parte1, parte2, parte3);
     </script>
   </body>
 </html>
